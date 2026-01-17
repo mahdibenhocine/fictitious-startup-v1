@@ -52,7 +52,7 @@ jobs:
             -var "version=${{ github.event.release.tag_name }}" \
             -var "vpc_id=${{ secrets.VPC_ID }}" \
             -var "subnet_id=${{ secrets.SUBNET_ID }}" \
-            image.pkr.hcl
+            ec2-instance.pkr.hcl
       
       - name: Build AMI with Packer
         run: |
@@ -60,4 +60,4 @@ jobs:
             -var "version=${{ github.event.release.tag_name }}" \
             -var "vpc_id=${{ secrets.VPC_ID }}" \
             -var "subnet_id=${{ secrets.SUBNET_ID }}" \
-            image.pkr.hcl
+            ec2-instance.pkr.hcl
