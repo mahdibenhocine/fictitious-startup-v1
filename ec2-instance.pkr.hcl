@@ -38,7 +38,7 @@ variable "region" {
 
 source "amazon-ebs" "ubuntu" {
   ami_name      = "cloudtalents-startup-${var.version}"
-  instance_type = "t3.micro"
+  instance_type = "t2.micro"
   region        = var.region
   
   source_ami_filter {
