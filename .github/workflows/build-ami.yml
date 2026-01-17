@@ -3,6 +3,9 @@ name: Build Custom AMI
 on:
   release:
     types: [created]
+  push:
+    tags:
+      - 'v*'
 
 permissions:
   id-token: write
@@ -22,7 +25,7 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::<YOUR_AWS_ACCOUNT_ID>:role/GitHubActionsPackerRole
+          role-to-assume: arn:aws:iam::212712011130:role/github-packer-oidc
           aws-region: ${{ env.AWS_REGION }}
       
       - name: Create secrets file
