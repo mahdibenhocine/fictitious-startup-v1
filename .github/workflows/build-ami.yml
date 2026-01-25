@@ -1,4 +1,4 @@
-name: Build Custom AMI with Releases
+name: Build Custom AMI with Releases 2
 
 on:
   release:
