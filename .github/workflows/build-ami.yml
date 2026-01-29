@@ -1,4 +1,4 @@
-name: Build Custom AMI with Releases v3
+name: Build Custom AMI with Releases 2
 
 on:
   push:
@@ -20,14 +20,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Read version from VERSION file
+      - name: Export Packer variables
         run: |
-          VERSION=$(cat VERSION)
-          echo "PACKER_VAR_version=$VERSION" >> $GITHUB_ENV
-          echo "Using version: $VERSION"
-
-      - name: Set network variables for Packer
-        run: |
+          echo "PACKER_VAR_version=$(cat VERSION)" >> $GITHUB_ENV
           echo "PACKER_VAR_vpc_id=${{ secrets.VPC_ID }}" >> $GITHUB_ENV
           echo "PACKER_VAR_subnet_id=${{ secrets.SUBNET_ID }}" >> $GITHUB_ENV
 
