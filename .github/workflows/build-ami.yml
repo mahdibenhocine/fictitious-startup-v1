@@ -17,31 +17,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repo
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2️⃣ Export Packer variables for the build step
       - name: Export Packer variables
         run: |
           echo "PACKER_VAR_version=$(cat VERSION)" >> $GITHUB_ENV
           echo "PACKER_VAR_vpc_id=${{ secrets.VPC_ID }}" >> $GITHUB_ENV
           echo "PACKER_VAR_subnet_id=${{ secrets.SUBNET_ID }}" >> $GITHUB_ENV
 
+      # 3️⃣ Debug (optional) to confirm variables exist
+      - name: Debug Packer variables
+        run: env | grep PACKER_VAR
+
+      # 4️⃣ Configure AWS credentials
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::212712011130:role/github-packer-oidc
           aws-region: ${{ env.AWS_REGION }}
 
+      # 5️⃣ Setup Packer
       - name: Setup Packer
         uses: hashicorp/setup-packer@main
         with:
           version: "latest"
 
+      # 6️⃣ Initialize Packer
       - name: Initialize Packer
         run: packer init ec2-instance.pkr.hcl
 
+      # 7️⃣ Validate Packer template
+      # ⚠️ Explicitly pass variables because validate does NOT read PACKER_VAR_*
       - name: Validate Packer template
-        run: packer validate ec2-instance.pkr.hcl
+        run: |
+          packer validate \
+            -var "version=$(cat VERSION)" \
+            -var "vpc_id=${{ secrets.VPC_ID }}" \
+            -var "subnet_id=${{ secrets.SUBNET_ID }}" \
+            ec2-instance.pkr.hcl
 
+      # 8️⃣ Build AMI with Packer (reads PACKER_VAR_* automatically)
       - name: Build AMI with Packer
         run: packer build ec2-instance.pkr.hcl
