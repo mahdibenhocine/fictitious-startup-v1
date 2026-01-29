@@ -50,10 +50,6 @@ source "amazon-ebs" "ubuntu" {
     most_recent = true
     owners      = ["099720109477"]
   }
-
-  metadata_options {
-    http_tokens = "required"
-  }
   
   # Required for accounts without default VPC
   vpc_id                      = var.vpc_id

@@ -1,11 +1,9 @@
-name: Build Custom AMI with Releases 2
+name: Build Custom AMI with Releases v3
 
 on:
-  release:
-    types: [created]
   push:
-    tags:
-      - 'v*'
+    branches:
+      - main
 
 permissions:
   id-token: write
@@ -17,42 +15,38 @@ env:
 jobs:
   build-ami:
     runs-on: ubuntu-latest
-    
-    env:
-      PACKER_VAR_version: ${{ github.event.release.tag_name || github.ref_name }}
-      PACKER_VAR_vpc_id: ${{ secrets.VPC_ID }}
-      PACKER_VAR_subnet_id: ${{ secrets.SUBNET_ID }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      
+
+      - name: Read version from VERSION file
+        run: |
+          VERSION=$(cat VERSION)
+          echo "PACKER_VAR_version=$VERSION" >> $GITHUB_ENV
+          echo "Using version: $VERSION"
+
+      - name: Set network variables for Packer
+        run: |
+          echo "PACKER_VAR_vpc_id=${{ secrets.VPC_ID }}" >> $GITHUB_ENV
+          echo "PACKER_VAR_subnet_id=${{ secrets.SUBNET_ID }}" >> $GITHUB_ENV
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: arn:aws:iam::212712011130:role/github-packer-oidc
           aws-region: ${{ env.AWS_REGION }}
-      
-      - name: Create secrets file
-        run: |
-          cat > secrets.sh << 'EOF'
-          #!/bin/bash
-          export SECRET_KEY='${{ secrets.SECRET_KEY }}'
-          export DB_USER='${{ secrets.DB_USER }}'
-          export DB_PASSWORD='${{ secrets.DB_PASSWORD }}'
-          EOF
-          chmod +x secrets.sh
-      
+
       - name: Setup Packer
         uses: hashicorp/setup-packer@main
         with:
           version: "latest"
-      
+
       - name: Initialize Packer
         run: packer init ec2-instance.pkr.hcl
-      
+
       - name: Validate Packer template
         run: packer validate ec2-instance.pkr.hcl
-      
+
       - name: Build AMI with Packer
         run: packer build ec2-instance.pkr.hcl
