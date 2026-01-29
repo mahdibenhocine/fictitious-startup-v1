@@ -18,6 +18,11 @@ jobs:
   build-ami:
     runs-on: ubuntu-latest
     
+    env:
+      PACKER_VAR_version: ${{ github.event.release.tag_name || github.ref_name }}
+      PACKER_VAR_vpc_id: ${{ secrets.VPC_ID }}
+      PACKER_VAR_subnet_id: ${{ secrets.SUBNET_ID }}
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -47,17 +52,7 @@ jobs:
         run: packer init ec2-instance.pkr.hcl
       
       - name: Validate Packer template
-        run: |
-          packer validate \
-            -var "version=${{ github.event.release.tag_name }}" \
-            -var "vpc_id=${{ secrets.VPC_ID }}" \
-            -var "subnet_id=${{ secrets.SUBNET_ID }}" \
-            ec2-instance.pkr.hcl
+        run: packer validate ec2-instance.pkr.hcl
       
       - name: Build AMI with Packer
-        run: |
-          packer build \
-            -var "version=${{ github.event.release.tag_name }}" \
-            -var "vpc_id=${{ secrets.VPC_ID }}" \
-            -var "subnet_id=${{ secrets.SUBNET_ID }}" \
-            ec2-instance.pkr.hcl
+        run: packer build ec2-instance.pkr.hcl
