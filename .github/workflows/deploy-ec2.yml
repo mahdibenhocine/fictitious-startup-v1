@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       custom_ami_version:
-        description: 'Custom AMI version to deploy'
+        description: 'Custom AMI version 2 deploy'
         required: true
         type: string
 
