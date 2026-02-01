@@ -9,10 +9,8 @@ on:
         type: string
 
 env:
-  TF_CLOUD_ORGANIZATION: "cloudwithben-org"  # Replace with your org name
-  TF_API_TOKEN: "${{ secrets.TF_API_TOKEN }}"
-  TF_WORKSPACE: "app-dev-ec2"
-  CONFIG_DIRECTORY: "./terraform"
+  TF_CLOUD_ORGANIZATION: "cloudwithben-org"
+  TF_TOKEN_app_terraform_io: "${{ secrets.TF_API_TOKEN }}"
 
 jobs:
   terraform:
@@ -21,29 +19,24 @@ jobs:
     permissions:
       contents: read
     
+    defaults:
+      run:
+        working-directory: ./terraform
+    
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Upload Configuration
-        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.1
-        id: apply-upload
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
         with:
-          workspace: ${{ env.TF_WORKSPACE }}
-          directory: ${{ env.CONFIG_DIRECTORY }}
+          cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      - name: Create Apply Run
-        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.1
-        id: apply-run
-        with:
-          workspace: ${{ env.TF_WORKSPACE }}
-          configuration_version: ${{ steps.apply-upload.outputs.configuration_version_id }}
-          variables: |
-            custom_ami_version = "${{ github.event.inputs.custom_ami_version }}"
+      - name: Terraform Init
+        run: terraform init
 
-      - name: Apply
-        uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.1
-        if: fromJSON(steps.apply-run.outputs.payload).data.attributes.actions.IsConfirmable
-        with:
-          run: ${{ steps.apply-run.outputs.run_id }}
-          comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"
+      - name: Terraform Plan
+        run: terraform plan -var="custom_ami_version=${{ github.event.inputs.custom_ami_version }}" -out=tfplan
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
