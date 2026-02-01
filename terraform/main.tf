@@ -40,7 +40,7 @@ data "aws_ami" "custom_ami" {
   
   filter {
     name   = "name"
-    values = ["app-${var.custom_ami_version}"]
+    values = ["cloudtalents-startup-${var.custom_ami_version}"]
   }
   
   filter {
