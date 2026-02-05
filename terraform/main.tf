@@ -9,7 +9,7 @@ terraform {
   }
   
   cloud {
-    organization = "cloudwithben-org"  # Replace with your actual org name --
+    organization = "cloudwithben-org"  # Replace with your actual org name ---
     
     workspaces {
       name = "app-dev-ec2" 
