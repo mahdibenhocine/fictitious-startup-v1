@@ -21,7 +21,7 @@ provider "aws" {
   region = "eu-west-1"
 }
 
-# Data source to read VPC outputs from remote state
+# Data source to read VPC outputs from remote state of
 data "terraform_remote_state" "vpc" {
   backend = "remote"
   
