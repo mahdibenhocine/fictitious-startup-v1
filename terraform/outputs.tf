@@ -17,3 +17,13 @@ output "ami_id" {
   description = "AMI ID used for the instance"
   value       = data.aws_ami.custom_ami.id
 }
+
+output "instance_profile_name" {
+  description = "Name of the IAM instance profile"
+  value       = aws_iam_instance_profile.ec2_profile.name
+}
+
+output "iam_role_arn" {
+  description = "ARN of the IAM role"
+  value       = aws_iam_role.ec2_ssm_role.arn
+}

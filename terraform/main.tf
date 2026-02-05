@@ -62,3 +62,16 @@ resource "aws_instance" "app" {
     ManagedBy   = "terraform"
   }
 }
+
+resource "aws_instance" "app_server" {
+  ami                    = var.ami_id
+  instance_type         = var.instance_type
+  subnet_id             = var.subnet_id
+  vpc_security_group_ids = [aws_security_group.app_sg.id]
+  iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name  # Add this line
+
+  tags = {
+    Name    = "${var.project_name}-app-server"
+    Project = var.project_name
+  }
+}
