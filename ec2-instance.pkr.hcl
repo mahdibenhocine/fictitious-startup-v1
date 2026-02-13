@@ -86,6 +86,14 @@ build {
       "sudo chown -R ubuntu:ubuntu /opt/app"
     ]
   }
+
+  # NEW: Run setup.sh to configure the application
+  provisioner "shell" {
+    inline = [
+      "sudo chmod +x /opt/app/setup.sh",
+      "sudo bash /opt/app/setup.sh"
+    ]
+  }
   
   # Keep only the last 2 AMI releases
   post-processor "amazon-ami-management" {
