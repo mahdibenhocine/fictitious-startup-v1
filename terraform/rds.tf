@@ -67,7 +67,7 @@ resource "aws_db_subnet_group" "main" {
 resource "aws_db_instance" "postgres" {
   identifier     = "${lower(var.project_name)}-postgres"
   engine         = "postgres"
-  engine_version = "16.3"
+  engine_version = "16.11"
   instance_class = "db.t3.micro"
 
   db_name  = "mvp"
