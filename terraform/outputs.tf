@@ -27,3 +27,18 @@ output "iam_role_arn" {
   description = "ARN of the IAM role"
   value       = aws_iam_role.ec2_ssm_role.arn
 }
+
+output "rds_endpoint" {
+  description = "RDS instance endpoint"
+  value       = aws_db_instance.postgres.endpoint
+}
+
+output "rds_address" {
+  description = "RDS instance address (hostname only)"
+  value       = aws_db_instance.postgres.address
+}
+
+output "rds_port" {
+  description = "RDS instance port"
+  value       = aws_db_instance.postgres.port
+}
