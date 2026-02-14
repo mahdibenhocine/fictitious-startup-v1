@@ -1,6 +1,6 @@
 # RDS Parameter Group - disable forced SSL for DMS compatibility
 resource "aws_db_parameter_group" "postgres" {
-  name   = "${var.project_name}-postgres-params"
+  name   = "${lower(var.project_name)}-postgres-params"
   family = "postgres16"
 
   parameter {
@@ -54,7 +54,7 @@ resource "aws_vpc_security_group_egress_rule" "rds_all_outbound" {
 
 # RDS Subnet Group - place RDS in private subnets
 resource "aws_db_subnet_group" "main" {
-  name       = "${var.project_name}-db-subnet-group"
+  name       = "${lower(var.project_name)}-db-subnet-group"
   subnet_ids = data.terraform_remote_state.vpc.outputs.private_subnets
 
   tags = {
@@ -65,7 +65,7 @@ resource "aws_db_subnet_group" "main" {
 
 # RDS PostgreSQL Instance
 resource "aws_db_instance" "postgres" {
-  identifier     = "${var.project_name}-postgres"
+  identifier     = "${lower(var.project_name)}-postgres"
   engine         = "postgres"
   engine_version = "16.3"
   instance_class = "db.t3.micro"
