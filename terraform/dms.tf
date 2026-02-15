@@ -43,7 +43,7 @@ resource "aws_dms_replication_subnet_group" "main" {
 # DMS Replication Instance
 resource "aws_dms_replication_instance" "main" {
   replication_instance_id    = "${lower(var.project_name)}-dms-instance"
-  replication_instance_class = "dms.t2.micro"
+  replication_instance_class = "dms.t3.small"
   allocated_storage          = 20
   multi_az                   = false
   publicly_accessible        = false
