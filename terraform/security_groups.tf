@@ -35,3 +35,17 @@ resource "aws_vpc_security_group_egress_rule" "all" {
     Name = "allow-all-outbound"
   }
 }
+
+# Allow PostgreSQL from DMS Replication Instance
+resource "aws_vpc_security_group_ingress_rule" "ec2_postgres_from_dms" {
+  security_group_id            = aws_security_group.app.id
+  description                  = "Allow PostgreSQL from DMS"
+  from_port                    = 5432
+  to_port                      = 5432
+  ip_protocol                  = "tcp"
+  referenced_security_group_id = aws_security_group.dms.id
+
+  tags = {
+    Name = "allow-postgres-from-dms"
+  }
+}

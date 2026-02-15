@@ -42,3 +42,8 @@ output "rds_port" {
   description = "RDS instance port"
   value       = aws_db_instance.postgres.port
 }
+
+output "dms_replication_instance_private_ip" {
+  description = "Private IP of the DMS replication instance"
+  value       = aws_dms_replication_instance.main.replication_instance_private_ip_addresses
+}
