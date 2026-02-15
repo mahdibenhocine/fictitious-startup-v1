@@ -32,6 +32,8 @@ resource "aws_dms_replication_subnet_group" "main" {
   replication_subnet_group_description = "DMS replication subnet group"
   subnet_ids                           = data.terraform_remote_state.vpc.outputs.private_subnets
 
+  depends_on = [aws_iam_role_policy_attachment.dms_vpc_policy]
+
   tags = {
     Name    = "${lower(var.project_name)}-dms-subnet-group"
     Project = var.project_name
@@ -130,4 +132,32 @@ resource "aws_dms_replication_task" "migration" {
     Name    = "${lower(var.project_name)}-full-load"
     Project = var.project_name
   }
+}
+
+# IAM Role required by DMS to manage VPC resources
+resource "aws_iam_role" "dms_vpc_role" {
+  name = "dms-vpc-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Principal = {
+          Service = "dms.amazonaws.com"
+        }
+      }
+    ]
+  })
+
+  tags = {
+    Name    = "dms-vpc-role"
+    Project = var.project_name
+  }
+}
+
+resource "aws_iam_role_policy_attachment" "dms_vpc_policy" {
+  role       = aws_iam_role.dms_vpc_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole"
 }
