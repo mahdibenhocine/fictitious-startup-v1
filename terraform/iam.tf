@@ -37,3 +37,33 @@ resource "aws_iam_instance_profile" "ec2_profile" {
     Project = var.project_name
   }
 }
+
+# S3 media bucket access policy
+resource "aws_iam_role_policy" "ec2_s3_media" {
+  name = "${var.project_name}-ec2-s3-media-policy"
+  role = aws_iam_role.ec2_ssm_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid    = "S3MediaBucketAccess"
+        Effect = "Allow"
+        Action = [
+          "s3:ListBucket"
+        ]
+        Resource = aws_s3_bucket.media.arn
+      },
+      {
+        Sid    = "S3MediaObjectAccess"
+        Effect = "Allow"
+        Action = [
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:DeleteObject"
+        ]
+        Resource = "${aws_s3_bucket.media.arn}/*"
+      }
+    ]
+  })
+}
