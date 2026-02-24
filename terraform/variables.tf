@@ -20,3 +20,9 @@ variable "db_password" {
   type        = string
   sensitive   = true
 }
+
+variable "secret_key" {
+  description = "Django application secret key"
+  type        = string
+  sensitive   = true
+}

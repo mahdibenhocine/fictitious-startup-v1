@@ -67,3 +67,23 @@ resource "aws_iam_role_policy" "ec2_s3_media" {
     ]
   })
 }
+
+resource "aws_iam_role_policy" "ssm_parameter_access" {
+  name = "${var.project_name}-ssm-parameter-policy"
+  role = aws_iam_role.ec2_ssm_role.id
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "ssm:GetParameter",
+          "ssm:GetParameters",
+          "ssm:GetParametersByPath"
+        ]
+        Resource = "arn:aws:ssm:eu-west-1:*:parameter/cloudtalents/startup/*"
+      }
+    ]
+  })
+}
