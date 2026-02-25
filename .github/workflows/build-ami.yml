@@ -25,7 +25,7 @@ jobs:
     
     # 🔴 Hardcoded version here — update manually before each push
     env:
-      AMI_VERSION: "1.1.7"  # <-- Update this manually before every build
+      AMI_VERSION: "1.1.8"  # <-- Update this manually before every build
 
     steps:
       - name: Checkout code
@@ -36,17 +36,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::212712011130:role/github-packer-oidc
           aws-region: ${{ env.AWS_REGION }}
-      
-      - name: Create secrets file
-        run: |
-          cat > secrets.sh << 'EOF'
-          #!/bin/bash
-          export SECRET_KEY='${{ secrets.SECRET_KEY }}'
-          export DB_USER='${{ secrets.DB_USER }}'
-          export DB_PASSWORD='${{ secrets.DB_PASSWORD }}'
-          EOF
-          chmod +x secrets.sh
-      
+            
       - name: Setup Packer
         uses: hashicorp/setup-packer@main
         with:

@@ -1,5 +1,4 @@
 # s3.tf
-
 resource "aws_s3_bucket" "media" {
   bucket = "cloudwithben-media-dev"
 
