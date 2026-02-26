@@ -25,7 +25,7 @@ jobs:
     
     # 🔴 Hardcoded version here — update manually before each push
     env:
-      AMI_VERSION: "2.0"  # <-- Update this manually before every build
+      AMI_VERSION: "2.0.1"  # <-- Update this manually before every build
 
     steps:
       - name: Checkout code
