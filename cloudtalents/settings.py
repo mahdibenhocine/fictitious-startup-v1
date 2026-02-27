@@ -87,7 +87,7 @@ DATABASES = {
         'USER': ssm.get_parameter(Name=f"{SSM_PARAMETER_NAMESPACE}/db_user", WithDecryption=True)["Parameter"]["Value"],
         # SECURITY WARNING: this value should be kept secret! Don't push it to GitHub
         'PASSWORD': ssm.get_parameter(Name=f"{SSM_PARAMETER_NAMESPACE}/db_password", WithDecryption=True)["Parameter"]["Value"],
-        'HOST': ssm.get_parameter(Name=f"{SSM_PARAMETER_NAMESPACE}/database_endpoint", WithDecryption=True)["Parameter"]["Value"],
+        'HOST': ssm.get_parameter(Name=f"{SSM_PARAMETER_NAMESPACE}/database_endpoint", WithDecryption=True)["Parameter"]["Value"].split(':')[0],
         'PORT': '5432',
     }
 }
