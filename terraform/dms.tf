@@ -28,6 +28,7 @@ resource "aws_vpc_security_group_egress_rule" "dms_all_outbound" {
 
 # DMS Replication Subnet Group
 resource "aws_dms_replication_subnet_group" "main" {
+  count = 0  # Migration complete - resource no longer needed
   replication_subnet_group_id          = "${lower(var.project_name)}-dms-subnet-group"
   replication_subnet_group_description = "DMS replication subnet group"
   subnet_ids                           = data.terraform_remote_state.vpc.outputs.private_subnets
@@ -42,6 +43,7 @@ resource "aws_dms_replication_subnet_group" "main" {
 
 # DMS Replication Instance
 resource "aws_dms_replication_instance" "main" {
+  count = 0  # Migration complete - resource no longer needed
   replication_instance_id    = "${lower(var.project_name)}-dms-instance"
   replication_instance_class = "dms.t3.small"
   allocated_storage          = 20
@@ -63,6 +65,7 @@ resource "aws_dms_replication_instance" "main" {
 
 # Source Endpoint - PostgreSQL on EC2
 resource "aws_dms_endpoint" "source" {
+  count = 0  # Migration complete - resource no longer needed
   endpoint_id   = "${lower(var.project_name)}-source-ec2"
   endpoint_type = "source"
   engine_name   = "postgres"
@@ -82,6 +85,7 @@ resource "aws_dms_endpoint" "source" {
 
 # Target Endpoint - RDS PostgreSQL
 resource "aws_dms_endpoint" "target" {
+  count = 0  # Migration complete - resource no longer needed
   endpoint_id   = "${lower(var.project_name)}-target-rds"
   endpoint_type = "target"
   engine_name   = "postgres"
@@ -104,6 +108,7 @@ resource "aws_dms_endpoint" "target" {
 # ============================================
 
 resource "aws_dms_replication_task" "migration" {
+  count = 0  # Migration complete - resource no longer needed
   replication_task_id      = "${lower(var.project_name)}-full-load"
   replication_instance_arn = aws_dms_replication_instance.main.replication_instance_arn
   source_endpoint_arn      = aws_dms_endpoint.source.endpoint_arn
