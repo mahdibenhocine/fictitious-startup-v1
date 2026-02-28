@@ -45,5 +45,5 @@ output "rds_port" {
 
 output "dms_replication_instance_private_ip" {
   description = "Private IP of the DMS replication instance"
-  value       = aws_dms_replication_instance.main.replication_instance_private_ips
+  value = length(aws_dms_replication_instance.main) > 0 ? aws_dms_replication_instance.main[0].replication_instance_private_ips : null
 }

@@ -110,9 +110,9 @@ resource "aws_dms_endpoint" "target" {
 resource "aws_dms_replication_task" "migration" {
   count = 0  # Migration complete - resource no longer needed
   replication_task_id      = "${lower(var.project_name)}-full-load"
-  replication_instance_arn = aws_dms_replication_instance.main.replication_instance_arn
-  source_endpoint_arn      = aws_dms_endpoint.source.endpoint_arn
-  target_endpoint_arn      = aws_dms_endpoint.target.endpoint_arn
+  replication_instance_arn = aws_dms_replication_instance.main[count.index].replication_instance_arn
+  source_endpoint_arn      = aws_dms_endpoint.source[count.index].endpoint_arn
+  target_endpoint_arn      = aws_dms_endpoint.target[count.index].endpoint_arn
   migration_type           = "full-load"
 
   # Don't start automatically
