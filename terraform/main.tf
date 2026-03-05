@@ -63,3 +63,62 @@ resource "aws_instance" "app" {
     ManagedBy   = "terraform"
   }
 }
+
+resource "aws_launch_template" "app" {
+  name_prefix   = "app-"
+  image_id      = data.aws_ami.custom_ami.id
+  instance_type = "t2.micro"
+
+  # associate_public_ip_address must live inside network_interfaces
+  # and the security group moves here too as a result
+  network_interfaces {
+    associate_public_ip_address = true
+    security_groups             = [aws_security_group.app.id]
+  }
+
+  iam_instance_profile {
+    name = aws_iam_instance_profile.ec2_profile.name
+  }
+
+  # Drops CloudWatch metrics from 5-minute to 1-minute intervals
+  # Required for the ASG to react fast enough to CPU spikes
+  monitoring {
+    enabled = true
+  }
+
+  tag_specifications {
+    resource_type = "instance"
+    tags = {
+      Name        = "app-asg-instance"
+      Environment = "development"
+      ManagedBy   = "terraform"
+    }
+  }
+}
+
+resource "aws_autoscaling_group" "app" {
+  name                = "app-asg"
+  min_size            = 1
+  max_size            = 5
+  desired_capacity    = 1
+
+  # Spread instances across your private/public subnets
+  # These should already be available via your remote state data source
+  vpc_zone_identifier = [<your subnet id(s)>]
+
+  launch_template {
+    id      = aws_launch_template.app.id
+    version = "$Latest"
+  }
+
+  # How long to wait for an instance to pass health checks before
+  # marking it as unhealthy and replacing it
+  health_check_grace_period = 300
+  health_check_type         = "EC2"
+
+  tag {
+    key                 = "Name"
+    value               = "app-asg-instance"
+    propagate_at_launch = true
+  }
+}
