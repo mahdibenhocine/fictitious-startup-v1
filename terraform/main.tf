@@ -104,7 +104,7 @@ resource "aws_autoscaling_group" "app" {
 
   # Spread instances across your private/public subnets
   # These should already be available via your remote state data source
-  vpc_zone_identifier = [<your subnet id(s)>]
+  vpc_zone_identifier = data.terraform_remote_state.vpc.outputs.public_subnets[0]
 
   launch_template {
     id      = aws_launch_template.app.id
