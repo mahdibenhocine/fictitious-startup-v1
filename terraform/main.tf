@@ -49,21 +49,6 @@ data "aws_ami" "custom_ami" {
   }
 }
 
-resource "aws_instance" "app" {
-  ami                         = data.aws_ami.custom_ami.id
-  instance_type              = "t2.micro"
-  subnet_id                  = data.terraform_remote_state.vpc.outputs.public_subnets[0]
-  vpc_security_group_ids     = [aws_security_group.app.id]
-  iam_instance_profile       = aws_iam_instance_profile.ec2_profile.name  # SSM access
-  associate_public_ip_address = true
-  
-  tags = {
-    Name        = "app-instance"
-    Environment = "development"
-    ManagedBy   = "terraform"
-  }
-}
-
 resource "aws_launch_template" "app" {
   name_prefix   = "app-"
   image_id      = data.aws_ami.custom_ami.id
