@@ -70,7 +70,7 @@ resource "aws_dms_endpoint" "source" {
   endpoint_type = "source"
   engine_name   = "postgres"
 
-  server_name   = aws_instance.app.private_ip
+  server_name   = "migration-complete"
   port          = 5432
   database_name = "mvp"
   username      = var.db_username
