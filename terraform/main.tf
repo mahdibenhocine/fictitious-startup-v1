@@ -127,14 +127,14 @@ resource "aws_lb" "app" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.app.id]
-  subnets            = var.public_subnet_ids
+  subnets            = data.terraform_remote_state.vpc.outputs.public_subnets
 }
 
 resource "aws_lb_target_group" "app" {
   name                          = "cloudtalents-tg"
   port                          = 80
   protocol                      = "HTTP"
-  vpc_id                        = var.vpc_id
+  vpc_id                        = data.terraform_remote_state.vpc.outputs.vpc_id
   load_balancing_algorithm_type = "least_outstanding_requests"
 
   health_check {
