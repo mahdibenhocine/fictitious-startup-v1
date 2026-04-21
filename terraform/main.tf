@@ -121,3 +121,43 @@ resource "aws_autoscaling_policy" "app_cpu_target_tracking" {
     target_value = 60.0
   }
 }
+
+resource "aws_lb" "app" {
+  name               = "cloudtalents-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.app.id]
+  subnets            = var.public_subnet_ids
+}
+
+resource "aws_lb_target_group" "app" {
+  name                          = "cloudtalents-tg"
+  port                          = 80
+  protocol                      = "HTTP"
+  vpc_id                        = var.vpc_id
+  load_balancing_algorithm_type = "least_outstanding_requests"
+
+  health_check {
+    path                = "/"
+    healthy_threshold   = 2
+    unhealthy_threshold = 4
+    timeout             = 15
+    interval            = 30
+  }
+}
+
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.app.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app.arn
+  }
+}
+
+resource "aws_autoscaling_attachment" "app" {
+  autoscaling_group_name = aws_autoscaling_group.app.name
+  lb_target_group_arn    = aws_lb_target_group.app.arn
+}
