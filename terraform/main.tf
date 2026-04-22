@@ -68,7 +68,7 @@ resource "aws_launch_template" "app" {
   # Drops CloudWatch metrics from 5-minute to 1-minute intervals
   # Required for the ASG to react fast enough to CPU spikes
   monitoring {
-    enabled = false
+    enabled = true
   }
 
   tag_specifications {
@@ -99,7 +99,7 @@ resource "aws_autoscaling_group" "app" {
   # How long to wait for an instance to pass health checks before
   # marking it as unhealthy and replacing it
   health_check_grace_period = 300
-  health_check_type         = "EC2"
+  health_check_type         = "ELB"
 
   tag {
     key                 = "Name"
