@@ -68,7 +68,7 @@ resource "aws_launch_template" "app" {
   # Drops CloudWatch metrics from 5-minute to 1-minute intervals
   # Required for the ASG to react fast enough to CPU spikes
   monitoring {
-    enabled = true
+    enabled = false
   }
 
   tag_specifications {

@@ -13,7 +13,7 @@ class AppUser(HttpUser):
 
     def on_start(self):
         response = self.client.post(
-            "/auth/", json=dict(username="locust", password="Coolcool-1")
+            "/auth/", json=dict(username="mahdiben", password="Coolcool-1")
         )
         if not response.status_code == 200:
             raise ValueError
