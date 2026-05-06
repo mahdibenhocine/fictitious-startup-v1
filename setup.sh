@@ -111,3 +111,32 @@ sudo ufw --force enable
 
 # Print completion message
 echo "Django application setup complete!"
+
+# Install CloudWatch Agent
+sudo dnf install -y amazon-cloudwatch-agent
+
+# Create CloudWatch Agent configuration
+sudo mkdir -p /opt/app
+sudo tee /opt/app/cloudwatch-config.json > /dev/null <<'EOF'
+{
+  "metrics": {
+    "append_dimensions": {
+      "AutoScalingGroupName": "${aws:AutoScalingGroupName}",
+      "ImageId": "${aws:ImageId}",
+      "InstanceId": "${aws:InstanceId}",
+      "InstanceType": "${aws:InstanceType}"
+    },
+    "metrics_collected": {
+      "mem": {
+        "measurement": [
+          {
+            "name": "mem_used_percent",
+            "rename": "MEM_USAGE_PERCENT",
+            "unit": "Percent"
+          }
+        ]
+      }
+    }
+  }
+}
+EOF
