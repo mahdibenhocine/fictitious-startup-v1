@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set -e
 APP_DIR="/opt/app"
 
 #################################################################################################
@@ -18,7 +18,7 @@ sudo chown -R ubuntu:ubuntu /opt/app
 # Relevant link: https://ubuntu.com/server/docs/package-management
 #################################################################################################
 sudo apt-get update
-sudo apt-get install -y python3-pip python3-venv nginx
+sudo apt-get install -y python3-pip python3.10-venv nginx
 
 #################################################################################################
 # Create a Python virtual environment in the current directory and activate it
