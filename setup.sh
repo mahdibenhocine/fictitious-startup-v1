@@ -113,7 +113,9 @@ sudo ufw --force enable
 echo "Django application setup complete!"
 
 # Install CloudWatch Agent
-sudo dnf install -y amazon-cloudwatch-agent
+wget https://amazoncloudwatch-agent.s3.amazonaws.com/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+sudo dpkg -i -E ./amazon-cloudwatch-agent.deb
+rm amazon-cloudwatch-agent.deb
 
 # Create CloudWatch Agent configuration
 sudo mkdir -p /opt/app
