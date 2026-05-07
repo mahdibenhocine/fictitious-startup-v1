@@ -140,3 +140,13 @@ sudo tee /opt/app/cloudwatch-config.json > /dev/null <<'EOF'
   }
 }
 EOF
+
+# Start the CloudWatch Agent with the config file
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config \
+  -m ec2 \
+  -c file:/opt/app/cloudwatch-config.json \
+  -s
+
+# Enable the service so it starts automatically on boot
+sudo systemctl enable amazon-cloudwatch-agent
