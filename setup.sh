@@ -139,7 +139,22 @@ sudo tee /opt/app/cloudwatch-config.json > /dev/null <<'EOF'
         ]
       }
     }
-  }
+  },
+  "logs": {
+    "logs_collected": {
+        "files": {
+        "collect_list": [
+            {
+            "file_path": "/opt/app/*.log",
+            "log_group_name": "/startup/app",
+            "log_stream_name": "{instance_id}",
+            "retention_in_days": 30
+            }
+        ]
+        }
+    }
+   }
+
 }
 EOF
 
