@@ -47,7 +47,7 @@ resource "aws_cloudwatch_metric_alarm" "rds_cpu_high" {
   statistic           = "Average"
   threshold           = 70
   dimensions = {
-    DBInstanceIdentifier = aws_db_instance.cloudtalents.identifier
+    DBInstanceIdentifier = aws_db_instance.postgres.identifier
   }
   alarm_actions = local.alarm_actions
   ok_actions    = local.alarm_actions
