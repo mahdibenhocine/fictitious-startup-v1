@@ -24,7 +24,7 @@ resource "aws_cloudwatch_metric_alarm" "ec2_memory_high" {
   alarm_description   = "Average EC2 memory across the ASG exceeded 70%"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = 2
-  metric_name         = "mem_used_percent"
+  metric_name         = "MEM_USAGE_PERCENT"
   namespace           = "CWAgent"
   period              = 60
   statistic           = "Average"
