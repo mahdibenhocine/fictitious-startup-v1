@@ -128,6 +128,7 @@ sudo tee /opt/app/cloudwatch-config.json > /dev/null <<'EOF'
       "InstanceId": "${aws:InstanceId}",
       "InstanceType": "${aws:InstanceType}"
     },
+    "aggregation_dimensions": [["AutoScalingGroupName"]],
     "metrics_collected": {
       "mem": {
         "measurement": [
